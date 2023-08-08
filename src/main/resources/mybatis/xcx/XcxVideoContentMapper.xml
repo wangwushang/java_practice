@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.xcx.mapper.XcxVideoContentMapper">
+    
+    <resultMap type="com.ruoyi.project.xcx.domain.XcxVideoContent" id="XcxVideoContentResult">
+        <result property="id"    column="id"    />
+        <result property="videoPicUrl"    column="video_pic_url"    />
+        <result property="videoDetail"    column="video_detail"    />
+        <result property="videoTitle"    column="video_title"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="com.ruoyi.project.xcx.domain.XcxVideoChapter" id="XcxVideoChapterResult">
+        <result property="id"    column="id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="chapterTitle"    column="chapter_title"    />
+        <result property="chapterUrl"    column="chapter_url"    />
+        <result property="chapterNum"    column="chapter_num"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="com.ruoyi.project.xcx.domain.vo.XcxVideoDetailDataVO" id="XcxVideoDetailDataResult">
+        <result property="id"    column="id"    />
+        <result property="videoPicUrl"    column="video_pic_url"    />
+        <result property="videoDetail"    column="video_detail"    />
+        <result property="videoTitle"    column="video_title"    />
+        <collection property="videoChapterList" ofType="com.ruoyi.project.xcx.domain.XcxVideoChapter"
+                    select="queryVideoChapter" column="id">
+
+        </collection>
+    </resultMap>
+
+
+    <select id="getAppVideoDetailData" resultType="com.ruoyi.project.xcx.domain.vo.XcxVideoDetailDataVO">
+        select id,video_pic_url,video_detail,video_title from xcx_video_content where id = #{videoContentId} and `status` = 0 and del_flag = 0
+    </select>
+    <select id="queryVideoChapter" resultMap="XcxVideoChapterResult">
+        SELECT * FROM `xcx_video_chapter` where video_id = #{id} and `status` = 0 and del_flag = 0
+    </select>
+
+    <sql id="selectXcxVideoContentVo">
+        select id, video_pic_url, video_detail, video_title, status, create_time, update_time, del_flag from xcx_video_content
+    </sql>
+
+    <select id="selectXcxVideoContentList" parameterType="com.ruoyi.project.xcx.domain.XcxVideoContent" resultMap="XcxVideoContentResult">
+        <include refid="selectXcxVideoContentVo"/>
+        <where>  
+            <if test="videoPicUrl != null  and videoPicUrl != ''"> and video_pic_url = #{videoPicUrl}</if>
+            <if test="videoDetail != null  and videoDetail != ''"> and video_detail = #{videoDetail}</if>
+            <if test="videoTitle != null  and videoTitle != ''"> and video_title = #{videoTitle}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectXcxVideoContentById" parameterType="Long" resultMap="XcxVideoContentResult">
+        <include refid="selectXcxVideoContentVo"/>
+        where id = #{id}
+    </select>
+    <select id="getLikeContent" resultType="com.ruoyi.project.xcx.domain.XcxVideoContent">
+        SELECT * FROM table_name where id != #{videoContentId} ORDER BY RAND() limit 6
+    </select>
+
+
+    <insert id="insertXcxVideoContent" parameterType="com.ruoyi.project.xcx.domain.XcxVideoContent" useGeneratedKeys="true" keyProperty="id">
+        insert into xcx_video_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoPicUrl != null">video_pic_url,</if>
+            <if test="videoDetail != null">video_detail,</if>
+            <if test="videoTitle != null">video_title,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoPicUrl != null">#{videoPicUrl},</if>
+            <if test="videoDetail != null">#{videoDetail},</if>
+            <if test="videoTitle != null">#{videoTitle},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXcxVideoContent" parameterType="com.ruoyi.project.xcx.domain.XcxVideoContent">
+        update xcx_video_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoPicUrl != null">video_pic_url = #{videoPicUrl},</if>
+            <if test="videoDetail != null">video_detail = #{videoDetail},</if>
+            <if test="videoTitle != null">video_title = #{videoTitle},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXcxVideoContentById" parameterType="Long">
+        delete from xcx_video_content where id = #{id}
+    </delete>
+
+    <delete id="deleteXcxVideoContentByIds" parameterType="String">
+        delete from xcx_video_content where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

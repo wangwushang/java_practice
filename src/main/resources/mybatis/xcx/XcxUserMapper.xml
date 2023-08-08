@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.xcx.mapper.XcxUserMapper">
+    
+    <resultMap type="com.ruoyi.project.xcx.domain.XcxUser" id="XcxUserResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="phone"    column="phone"    />
+        <result property="avterUrl"    column="avter_url"    />
+        <result property="tgCode"    column="tg_code"    />
+        <result property="idcard"    column="idcard"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectXcxUserVo">
+        select id, username, phone, avter_url, tg_code, idcard, status, create_time, update_time, del_flag from xcx_user
+    </sql>
+
+    <select id="selectXcxUserList" parameterType="com.ruoyi.project.xcx.domain.XcxUser" resultMap="XcxUserResult">
+        <include refid="selectXcxUserVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="avterUrl != null  and avterUrl != ''"> and avter_url = #{avterUrl}</if>
+            <if test="tgCode != null  and tgCode != ''"> and tg_code = #{tgCode}</if>
+            <if test="idcard != null  and idcard != ''"> and idcard = #{idcard}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectXcxUserById" parameterType="Long" resultMap="XcxUserResult">
+        <include refid="selectXcxUserVo"/>
+        where id = #{id}
+    </select>
+    <select id="checkPhoneUnique" resultType="com.ruoyi.project.xcx.domain.XcxUser">
+        select id, phone from xcx_user where phone = #{phone} and del_flag = '0' limit 1
+    </select>
+
+    <insert id="insertXcxUser" parameterType="com.ruoyi.project.xcx.domain.XcxUser" useGeneratedKeys="true" keyProperty="id">
+        insert into xcx_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">username,</if>
+            <if test="phone != null">phone,</if>
+            <if test="avterUrl != null">avter_url,</if>
+            <if test="tgCode != null">tg_code,</if>
+            <if test="idcard != null">idcard,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null">#{username},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="avterUrl != null">#{avterUrl},</if>
+            <if test="tgCode != null">#{tgCode},</if>
+            <if test="idcard != null">#{idcard},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXcxUser" parameterType="com.ruoyi.project.xcx.domain.XcxUser">
+        update xcx_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null">username = #{username},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="avterUrl != null">avter_url = #{avterUrl},</if>
+            <if test="tgCode != null">tg_code = #{tgCode},</if>
+            <if test="idcard != null">idcard = #{idcard},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXcxUserById" parameterType="Long">
+        delete from xcx_user where id = #{id}
+    </delete>
+
+    <delete id="deleteXcxUserByIds" parameterType="String">
+        delete from xcx_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

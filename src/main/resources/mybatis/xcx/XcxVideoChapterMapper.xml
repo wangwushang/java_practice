@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.xcx.mapper.XcxVideoChapterMapper">
+    
+    <resultMap type="com.ruoyi.project.xcx.domain.XcxVideoChapter" id="XcxVideoChapterResult">
+        <result property="id"    column="id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="chapterTitle"    column="chapter_title"    />
+        <result property="chapterUrl"    column="chapter_url"    />
+        <result property="chapterNum"    column="chapter_num"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectXcxVideoChapterVo">
+        select id, video_id, chapter_title, chapter_url, chapter_num, status, create_time, update_time, del_flag from xcx_video_chapter
+    </sql>
+
+    <select id="selectXcxVideoChapterList" parameterType="com.ruoyi.project.xcx.domain.XcxVideoChapter" resultMap="XcxVideoChapterResult">
+        <include refid="selectXcxVideoChapterVo"/>
+        <where>  
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="chapterTitle != null  and chapterTitle != ''"> and chapter_title = #{chapterTitle}</if>
+            <if test="chapterUrl != null  and chapterUrl != ''"> and chapter_url = #{chapterUrl}</if>
+            <if test="chapterNum != null  and chapterNum != ''"> and chapter_num = #{chapterNum}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectXcxVideoChapterById" parameterType="Long" resultMap="XcxVideoChapterResult">
+        <include refid="selectXcxVideoChapterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertXcxVideoChapter" parameterType="com.ruoyi.project.xcx.domain.XcxVideoChapter">
+        insert into xcx_video_chapter
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="videoId != null">video_id,</if>
+            <if test="chapterTitle != null">chapter_title,</if>
+            <if test="chapterUrl != null">chapter_url,</if>
+            <if test="chapterNum != null">chapter_num,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="videoId != null">#{videoId},</if>
+            <if test="chapterTitle != null">#{chapterTitle},</if>
+            <if test="chapterUrl != null">#{chapterUrl},</if>
+            <if test="chapterNum != null">#{chapterNum},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXcxVideoChapter" parameterType="com.ruoyi.project.xcx.domain.XcxVideoChapter">
+        update xcx_video_chapter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="chapterTitle != null">chapter_title = #{chapterTitle},</if>
+            <if test="chapterUrl != null">chapter_url = #{chapterUrl},</if>
+            <if test="chapterNum != null">chapter_num = #{chapterNum},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXcxVideoChapterById" parameterType="Long">
+        delete from xcx_video_chapter where id = #{id}
+    </delete>
+
+    <delete id="deleteXcxVideoChapterByIds" parameterType="String">
+        delete from xcx_video_chapter where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
